@@ -13,7 +13,6 @@ class HttpService extends Component
 {
     /**
      * HTTP Service host
-     * http://192.168.1.18/
      * @var string
      */
     public $host;
@@ -107,11 +106,15 @@ class HttpService extends Component
         $error = curl_errno($ch);
         curl_close($ch);
 
-        if ($error || $code !== 200 || empty($response)) {
+        if ($error || empty($response)) {
             return '';
         }
 
-        return $response;
+        if ($code == 200 || $code == 404) {
+            return $response;
+        }
+
+        return '';
     }
 
     /**
@@ -126,9 +129,9 @@ class HttpService extends Component
         $searchParams = [];
         foreach ($params as $key => $param) {
             if (is_numeric($key)) {
-                $urlParams[] = urlencode($param);
+                $urlParams[] = rawurlencode($param);
             } else {
-                $searchParams[] = urlencode($key) . '=' . urlencode($param);
+                $searchParams[] = rawurlencode($key) . '=' . rawurlencode($param);
             }
         }
 
