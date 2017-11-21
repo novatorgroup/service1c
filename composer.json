@@ -1,7 +1,7 @@
 {
     "name": "novatorgroup/service1c",
     "version": "1.0.0",
-    "description": "Base classes for creating exchange components with 1C",
+    "description": "Component for executing requests to HTTP Services 1C ",
     "type": "yii2-extension",
     "authors": [
         {
