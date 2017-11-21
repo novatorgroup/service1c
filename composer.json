@@ -1,0 +1,21 @@
+{
+    "name": "novatorgroup/service1c",
+    "version": "1.0.0",
+    "description": "Base classes for creating exchange components with 1C",
+    "type": "yii2-extension",
+    "authors": [
+        {
+            "name": "Melnikov Ruslan",
+            "email": "mrs2000@inbox.ru"
+        }
+    ],
+    "require": {
+        "php": "~7",
+        "yiisoft/yii2": "*"
+    },
+    "autoload": {
+        "psr-4": {
+            "novatorgroup\\service1c\\": ""
+        }
+    }
+}
