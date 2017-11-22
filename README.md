@@ -25,9 +25,19 @@ to the require section of your `composer.json` file.
     $service = new HttpService([
         'host' => 'http://host.com',
         'base' => 'base'
+        'login' => 'login',
+        'password' => 'password',
+        'curlOptions' => [
+            CURLOPT_CONNECTTIMEOUT_MS => 200,
+            CURLOPT_TIMEOUT_MS => 1000,
+        ]
     ]);
 
     $response = $service->get('command', ['param', 'key' => 'value']);
+    
+    echo $response->code;
+    echo $response->error;
+    echo $response->result;
     
     // Request to:
     // http://host.com/base/hs/command/param?key=value

@@ -21,7 +21,7 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
         ]);
 
         $response = $service->get('command', ['aaa']);
-        $this->assertEmpty($response);
+        $this->assertEmpty($response->result);
     }
 
     public function testIncorrectParam()
@@ -29,7 +29,10 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
         $service = new HttpService($this->params);
 
         $response = $service->get('bonus', ['test_incorrect']);
-        $this->assertEmpty($response);
+
+        $this->assertEmpty($response->error);
+        $this->assertNotEmpty($response->result);
+        $this->assertEquals($response->code, 404);
     }
 
     public function testCorrectRequest()
@@ -37,9 +40,10 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
         $service = new HttpService($this->params);
 
         $code = 'Ц00012408';
-
         $response = $service->get('bonus', [$code]);
-        $this->assertNotEmpty($response);
-        $this->assertNotEquals(mb_strpos($response, $code), false);
+
+        $this->assertEmpty($response->error);
+        $this->assertEquals($response->code, 200);
+        $this->assertNotEquals(mb_strpos($response->result, $code), false);
     }
 }

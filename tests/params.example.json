@@ -1,4 +1,6 @@
 {
     "host": "http://host",
-    "base": "base"
+    "base": "base",
+    "login": "",
+    "password": ""
 }

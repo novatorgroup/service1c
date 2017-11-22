@@ -24,12 +24,22 @@ class HttpService extends Component
     public $base;
 
     /**
+     * 1C user login
+     * @var string
+     */
+    public $login;
+
+    /**
+     * 1C user password
+     * @var string
+     */
+    public $password;
+
+    /**
      * Default CURL options
      * @var array
      */
-    public $defaultOptions = [
-        CURLOPT_CONNECTTIMEOUT => 3,
-        CURLOPT_TIMEOUT => 10,
+    public $curlOptions = [
         CURLOPT_RETURNTRANSFER => 1,
         CURLOPT_HTTPHEADER => [
             'Content-Type: text/xml'
@@ -50,6 +60,11 @@ class HttpService extends Component
 
         $this->host = rtrim($this->host, '/') . '/';
         $this->base = trim($this->base, '/') . '/hs/';
+
+        if (!empty($this->login)) {
+            $authorization = 'Authorization: Basic ' . base64_encode($this->login . ':' . $this->password);
+            $this->curlOptions[CURLOPT_HTTPHEADER][] = $authorization;
+        }
     }
 
     /**
@@ -58,9 +73,9 @@ class HttpService extends Component
      * @param string $command
      * @param array $params - array params ['param1', 'a' => 'p2', 'b' => 'p3'] -> /param1/?a=p2&b=p3
      * @param array $options - connection options
-     * @return string
+     * @return Response
      */
-    public function get(string $command, array $params = [], array $options = []): string
+    public function get(string $command, array $params = [], array $options = []): Response
     {
         return $this->request('get', $command, $params, $options);
     }
@@ -71,9 +86,9 @@ class HttpService extends Component
      * @param string $command
      * @param array $params - array POST params ['a' => 'p2', 'b' => 'p3']
      * @param array $options - connection options
-     * @return string
+     * @return Response
      */
-    public function post(string $command, array $params = [], array $options = []): string
+    public function post(string $command, array $params = [], array $options = []): Response
     {
         return $this->request('post', $command, $params, $options);
     }
@@ -85,12 +100,12 @@ class HttpService extends Component
      * @param string $command
      * @param array $params
      * @param array $options
-     * @return string
+     * @return Response
      */
-    private function request(string $method, string $command, array $params = [], array $options = []): string
+    private function request(string $method, string $command, array $params = [], array $options = []): Response
     {
         $ch = curl_init();
-        curl_setopt_array($ch, ArrayHelper::merge($this->defaultOptions, $options));
+        curl_setopt_array($ch, ArrayHelper::merge($this->curlOptions, $options));
 
         $url = $this->host . $this->base . $command;
 
@@ -101,20 +116,20 @@ class HttpService extends Component
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         }
 
-        $response = curl_exec($ch);
-        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $error = curl_errno($ch);
+        $response = new Response();
+
+        $response->result = curl_exec($ch);
+        $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
+        if (curl_errno($ch)) {
+            $response->error = curl_error($ch);
+        } else if (empty($response->result)) {
+            $response->error = 'Empty result.';
+        }
+
         curl_close($ch);
 
-        if ($error || empty($response)) {
-            return '';
-        }
-
-        if ($code == 200 || $code == 404) {
-            return $response;
-        }
-
-        return '';
+        return $response;
     }
 
     /**
