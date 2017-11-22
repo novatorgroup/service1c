@@ -1,6 +1,6 @@
 {
     "name": "novatorgroup/service1c",
-    "version": "1.1.2",
+    "version": "1.1.3",
     "description": "Component for executing requests to HTTP Services 1C ",
     "keywords": ["yii", "1c", "http"],
     "type": "yii2-extension",
