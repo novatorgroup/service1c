@@ -23,8 +23,8 @@ to the require section of your `composer.json` file.
 ### Usage
 ```php
     $service = new HttpService([
-        'host' => 'http://host.com',
-        'base' => 'base'
+        'host' => 'http://host.com', //required
+        'base' => 'base' //required
         'login' => 'login',
         'password' => 'password',
         'curlOptions' => [

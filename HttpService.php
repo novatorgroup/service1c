@@ -36,15 +36,12 @@ class HttpService extends Component
     public $password;
 
     /**
-     * Default CURL options
+     * CURL options
      * @var array
      */
-    public $curlOptions = [
-        CURLOPT_RETURNTRANSFER => 1,
-        CURLOPT_HTTPHEADER => [
-            'Content-Type: text/xml'
-        ]
-    ];
+    public $curlOptions = [];
+
+    private $hostUrl;
 
     public function init()
     {
@@ -58,10 +55,9 @@ class HttpService extends Component
             throw new InvalidParamException('Param «base» is empty.');
         }
 
-        $this->host = rtrim($this->host, '/') . '/';
-        $this->base = trim($this->base, '/') . '/hs/';
+        $this->hostUrl = rtrim($this->host, '/') . '/' . trim($this->base, '/') . '/hs/';
 
-        if (!empty($this->login)) {
+        if (empty($this->login) === false) {
             $authorization = 'Authorization: Basic ' . base64_encode($this->login . ':' . $this->password);
             $this->curlOptions[CURLOPT_HTTPHEADER][] = $authorization;
         }
@@ -105,28 +101,25 @@ class HttpService extends Component
     private function request(string $method, string $command, array $params = [], array $options = []): Response
     {
         $ch = curl_init();
+
+        $options[CURLOPT_RETURNTRANSFER] = true;
         curl_setopt_array($ch, ArrayHelper::merge($this->curlOptions, $options));
 
-        $url = $this->host . $this->base . $command;
-
         if ($method === 'get') {
-            curl_setopt($ch, CURLOPT_URL, $url . '/' . $this->paramsGet($params));
+            curl_setopt($ch, CURLOPT_URL, $this->hostUrl . $command . '/' . $this->paramsGet($params));
         } else if ($method === 'post') {
-            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_URL, $this->hostUrl . $command);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
         }
 
         $response = new Response();
-
         $response->result = curl_exec($ch);
         $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-
         if (curl_errno($ch)) {
             $response->error = curl_error($ch);
-        } else if (empty($response->result)) {
+        } else if (is_string($response->result) === false) {
             $response->error = 'Empty result.';
         }
-
         curl_close($ch);
 
         return $response;
