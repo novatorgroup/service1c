@@ -8,6 +8,8 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Component for executing requests to HTTP Services 1C
+ *
+ * @author Melnikov R.S. <mrs2000@inbox.ru>
  */
 class HttpService extends Component
 {
