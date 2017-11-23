@@ -1,23 +1,16 @@
 # HTTP Service 1C
-
 Component for executing requests to HTTP Services 1C
 
 ### Installation
-
 The preferred way to install this extension is through [composer](http://getcomposer.org/download/).
-
 Either run
-
 ```
 php composer.phar require --prefer-dist novatorgroup/service1c "*"
 ```
-
 or add
-
 ```
 "novatorgroup/service1c": "*"
 ```
-
 to the require section of your `composer.json` file.
 
 ### Usage
