@@ -50,7 +50,7 @@ class HttpService extends Component
         parent::init();
 
         if (empty($this->host)) {
-            throw new InvalidParamException('Param «service» is empty.');
+            throw new InvalidParamException('Param «host» is empty.');
         }
 
         if (empty($this->base)) {
@@ -111,7 +111,8 @@ class HttpService extends Component
             curl_setopt($ch, CURLOPT_URL, $this->hostUrl . $command . '/' . $this->paramsGet($params));
         } else if ($method === 'post') {
             curl_setopt($ch, CURLOPT_URL, $this->hostUrl . $command);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, $params);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params, JSON_UNESCAPED_UNICODE));
         }
 
         $response = new Response();

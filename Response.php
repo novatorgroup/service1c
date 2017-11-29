@@ -24,4 +24,13 @@ class Response
      * @var string
      */
     public $result;
+
+    /**
+     * Request result is success
+     * @return bool
+     */
+    public function isOk()
+    {
+        return $this->code == 200 && empty($this->error) && !empty($this->result);
+    }
 }
