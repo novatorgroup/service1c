@@ -2,8 +2,8 @@
 
 namespace novatorgroup\service1c;
 
+use yii\base\InvalidArgumentException;
 use yii\base\Component;
-use yii\base\InvalidParamException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -50,11 +50,11 @@ class HttpService extends Component
         parent::init();
 
         if (empty($this->host)) {
-            throw new InvalidParamException('Param «host» is empty.');
+            throw new InvalidArgumentException('Param «host» is empty.');
         }
 
         if (empty($this->base)) {
-            throw new InvalidParamException('Param «base» is empty.');
+            throw new InvalidArgumentException('Param «base» is empty.');
         }
 
         $this->hostUrl = rtrim($this->host, '/') . '/' . trim($this->base, '/') . '/hs/';

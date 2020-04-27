@@ -15,9 +15,9 @@ to the require section of your `composer.json` file.
 
 ### Usage
 ```php
-    $service = new HttpService([
+    $service = new \novatorgroup\service1c\HttpService([
         'host' => 'http://host.com', //required
-        'base' => 'base' //required
+        'base' => 'base', //required
         'login' => 'login',
         'password' => 'password',
         'curlOptions' => [

@@ -1,6 +1,6 @@
 {
     "name": "novatorgroup/service1c",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "description": "Component for executing requests to HTTP Services 1C ",
     "keywords": ["yii", "1c", "http"],
     "type": "yii2-extension",
@@ -12,7 +12,7 @@
         }
     ],
     "require": {
-        "php": ">=7.0.0",
+        "php": ">=7.3.0",
         "yiisoft/yii2": "*"
     },
     "autoload": {
