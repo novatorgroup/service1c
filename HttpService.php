@@ -15,35 +15,30 @@ class HttpService extends Component
 {
     /**
      * HTTP Service host
-     * @var string
      */
-    public $host;
+    public string $host = '';
 
     /**
      * HTTP Service base
-     * @var string
      */
-    public $base;
+    public string $base = '';
 
     /**
      * 1C user login
-     * @var string
      */
-    public $login;
+    public string $login = '';
 
     /**
      * 1C user password
-     * @var string
      */
-    public $password;
+    public string $password = '';
 
     /**
      * CURL options
-     * @var array
      */
-    public $curlOptions = [];
+    public array $curlOptions = [];
 
-    private $hostUrl;
+    private string $hostUrl;
 
     public function init()
     {
@@ -107,6 +102,17 @@ class HttpService extends Component
         $options[CURLOPT_RETURNTRANSFER] = true;
         curl_setopt_array($ch, ArrayHelper::merge($this->curlOptions, $options));
 
+        $responseHeaders = [];
+        curl_setopt($ch, CURLOPT_HEADERFUNCTION, static function ($ch, $header) use (&$responseHeaders) {
+            $len = mb_strlen($header);
+            $header = explode(':', $header, 2);
+            if (count($header) < 2) {
+                return $len;
+            }
+            $responseHeaders[mb_strtolower(trim($header[0]))] = trim($header[1]);
+            return $len;
+        });
+
         if ($method === 'get') {
             curl_setopt($ch, CURLOPT_URL, $this->hostUrl . $command . '/' . $this->paramsGet($params));
         } else if ($method === 'post') {
@@ -118,10 +124,9 @@ class HttpService extends Component
         $response = new Response();
         $response->result = curl_exec($ch);
         $response->code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        $response->headers = $responseHeaders;
         if (curl_errno($ch)) {
             $response->error = curl_error($ch);
-        } else if (is_string($response->result) === false) {
-            $response->error = 'Empty result.';
         }
         curl_close($ch);
 

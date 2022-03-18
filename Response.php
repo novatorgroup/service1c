@@ -9,28 +9,41 @@ class Response
 {
     /**
      * Error message
-     * @var string
      */
-    public $error;
+    public string $error = '';
 
     /**
      * HTTP code
-     * @var int
      */
-    public $code;
+    public int $code = 0;
 
     /**
      * Response content
-     * @var string
      */
-    public $result;
+    public string $result = '';
+
+    /**
+     * Response headers
+     * @var array
+     */
+    public array $headers = [];
 
     /**
      * Request result is success
      * @return bool
      */
-    public function isOk()
+    public function isOk(): bool
     {
         return $this->code == 200 && empty($this->error) && !empty($this->result);
+    }
+
+    /**
+     * Get response header
+     * @param string $name - header name
+     * @return string|null
+     */
+    public function getHeader(string $name): ?string
+    {
+        return $this->headers[mb_strtolower($name)] ?? null;
     }
 }

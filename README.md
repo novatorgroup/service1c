@@ -35,11 +35,11 @@ to the require section of your `composer.json` file.
         echo $response->code;
         echo $response->error;
         echo $response->result;
+        echo $response->getHeader('Content-Length');
     }
     
     // POST
-    // - the body will be sent in JSON format
-    // - waiting for reply in XML format
+    // the body will be sent in JSON format
     $response = $service->post('command', ['param' => 'value1', 'param2' => ['a', 'b']]);
     
     // JSON

@@ -6,9 +6,9 @@ use novatorgroup\service1c\HttpService;
 
 class Service1cTest extends \PHPUnit\Framework\TestCase
 {
-    private $serviceParams;
+    private array $serviceParams = [];
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->serviceParams = json_decode(file_get_contents(__DIR__ . '\params.json'), true);
     }
@@ -33,7 +33,7 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
 
         $this->assertEmpty($response->error);
         $this->assertNotEmpty($response->result);
-        $this->assertEquals($response->code, 404);
+        $this->assertEquals(404, $response->code);
     }
 
     public function testCorrectRequest()
@@ -45,8 +45,11 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
 
         $this->assertTrue($response->isOk());
         $this->assertEmpty($response->error);
-        $this->assertEquals($response->code, 200);
-        $this->assertNotEquals(mb_strpos($response->result, $code), false);
+        $this->assertEquals(200, $response->code);
+        $this->assertNotEquals(false, mb_strpos($response->result, $code));
+        $this->assertNotEmpty($response->headers);
+        $this->assertNotEmpty($response->getHeader('Content-Length'));
+        $this->assertNull($response->getHeader('NOT-EXIST'));
     }
 
     public function testPostRequestIncorrectParam()
@@ -56,7 +59,7 @@ class Service1cTest extends \PHPUnit\Framework\TestCase
         $response = $service->post('discounts', $requestParams);
 
         $this->assertFalse($response->isOk());
-        $this->assertContains('Поле объекта не обнаружено', $response->result);
+        $this->assertStringContainsString('Поле объекта не обнаружено', $response->result);
 
         $xml = @simplexml_load_string($response->result);
         $this->assertEmpty($xml);
