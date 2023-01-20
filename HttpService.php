@@ -2,8 +2,8 @@
 
 namespace novatorgroup\service1c;
 
-use yii\base\InvalidArgumentException;
 use yii\base\Component;
+use yii\base\InvalidArgumentException;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
  *
  * @author Melnikov R.S. <mrs2000@inbox.ru>
  */
-class HttpService extends Component
+final class HttpService extends Component
 {
     /**
      * HTTP Service host
@@ -40,7 +40,7 @@ class HttpService extends Component
 
     private string $hostUrl;
 
-    public function init()
+    public function init(): void
     {
         parent::init();
 
@@ -63,10 +63,8 @@ class HttpService extends Component
     /**
      * GET request to 1C HTTP Service
      *
-     * @param string $command
      * @param array $params - array params ['param1', 'a' => 'p2', 'b' => 'p3'] -> /param1/?a=p2&b=p3
      * @param array $options - connection options
-     * @return Response
      */
     public function get(string $command, array $params = [], array $options = []): Response
     {
@@ -76,10 +74,8 @@ class HttpService extends Component
     /**
      * POST request to 1C HTTP Service
      *
-     * @param string $command
      * @param array $params - array POST params ['a' => 'p2', 'b' => 'p3']
      * @param array $options - connection options
-     * @return Response
      */
     public function post(string $command, array $params = [], array $options = []): Response
     {
@@ -88,12 +84,6 @@ class HttpService extends Component
 
     /**
      * Execute request
-     *
-     * @param string $method
-     * @param string $command
-     * @param array $params
-     * @param array $options
-     * @return Response
      */
     private function request(string $method, string $command, array $params = [], array $options = []): Response
     {
@@ -135,9 +125,6 @@ class HttpService extends Component
 
     /**
      * Prepare GET params
-     *
-     * @param array $params
-     * @return string
      */
     private function paramsGet(array $params): string
     {
