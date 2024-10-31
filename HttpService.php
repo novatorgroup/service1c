@@ -11,7 +11,7 @@ use yii\helpers\ArrayHelper;
  *
  * @author Melnikov R.S. <mrs2000@inbox.ru>
  */
-final class HttpService extends Component
+class HttpService extends Component
 {
     /**
      * HTTP Service host
